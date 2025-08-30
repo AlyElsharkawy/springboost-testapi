@@ -1,6 +1,10 @@
-package com.example.springboot;
+package com.example.springboot.controller;
 
 import java.util.List;
+import com.example.springboot.service.HSCodeService;
+import com.example.springboot.entity.HSCode;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,23 +36,22 @@ public class HSCodeController {
   }
 
   @GetMapping("{id}")
-  public HSCode getHSCodeById(@PathVariable Long id) {
+  public ResponseEntity<HSCode> getHSCodeById(@PathVariable Long id) {
     return serv.getHSCodeById(id);
   }
 
   @PostMapping
-  public void addNewHSCode(@RequestBody HSCode input) {
-    serv.insertHSCode(input);
+  public ResponseEntity<Long> addNewHSCode(@RequestBody HSCode input) {
+    return serv.insertHSCode(input);
   }
 
   @DeleteMapping("{id}")
-  public void deleteHSCode(@PathVariable Long id) {
-    serv.deleteHSCodeById(id);
+  public ResponseEntity<HSCode> deleteHSCode(@PathVariable Long id) {
+    return serv.deleteHSCodeById(id);
   }
 
   @PutMapping("{id}")
-  public void updateHSCode(@PathVariable Long id, @RequestBody HSCode newHSCode) {
-    HSCode temp = serv.updateHSCode(id, newHSCode);
-    return;
+  public ResponseEntity<HSCode> updateHSCode(@PathVariable Long id, @RequestBody HSCode newHSCode) {
+    return serv.updateHSCode(id, newHSCode);
   }
 }

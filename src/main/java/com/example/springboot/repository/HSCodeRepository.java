@@ -1,5 +1,6 @@
-package com.example.springboot;
+package com.example.springboot.repository;
 
+import com.example.springboot.entity.HSCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
