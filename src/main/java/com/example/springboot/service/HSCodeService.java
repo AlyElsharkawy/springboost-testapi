@@ -2,15 +2,16 @@ package com.example.springboot.service;
 
 import com.example.springboot.repository.HSCodeRepository;
 import com.example.springboot.entity.HSCode;
+import com.example.springboot.entity.HSCodeMinimal;
+import com.example.springboot.mapper.HSCodeMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.Optional;
-
-import javax.swing.text.html.Option;
 
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -18,6 +19,8 @@ import java.time.LocalDateTime;
 @Service
 public class HSCodeService {
   private final HSCodeRepository repo;
+  @Autowired
+  private HSCodeMapper hsCodeMapper;
 
   public HSCodeService(HSCodeRepository repo) {
     this.repo = repo;
@@ -40,6 +43,25 @@ public class HSCodeService {
     if (temp.isPresent())
       return ResponseEntity.ok(temp.get());
     else
+      return ResponseEntity.notFound().build();
+  }
+
+  public ResponseEntity<HSCodeMinimal> getHSCodeByIdMinimal(Long id) {
+    // return repo.findById(id).orElseThrow(() -> new RuntimeException("HSCode not
+    // found"));
+    Optional<HSCode> temp;
+    try {
+      temp = repo.findById(id);
+    } catch (Exception e) {
+      System.out.println("DATABASE ERROR");
+      return ResponseEntity.internalServerError().build();
+    }
+    if (temp.isPresent()) {
+      HSCodeMinimal tempDto = hsCodeMapper.toDTO(temp.get());
+      System.out.println("Moment of truth: ");
+      // System.out.println("Name: " + tempDto.getName());
+      return ResponseEntity.ok(tempDto);
+    } else
       return ResponseEntity.notFound().build();
   }
 

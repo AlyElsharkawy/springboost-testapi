@@ -3,6 +3,8 @@ package com.example.springboot.controller;
 import java.util.List;
 import com.example.springboot.service.HSCodeService;
 import com.example.springboot.entity.HSCode;
+import com.example.springboot.entity.HSCodeMinimal;
+import com.example.springboot.mapper.HSCodeMapper;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,9 +37,21 @@ public class HSCodeController {
      */
   }
 
+  /*
+   * I WAS TESTING OUT THE DTO AND MAPPERS SO I MADE SPECIAL METHODS FOR THEM
+   * IN PRODUCTION, WE ALWAYS USE A DTO REGARDLESS
+   */
+
   @GetMapping("{id}")
   public ResponseEntity<HSCode> getHSCodeById(@PathVariable Long id) {
+    System.out.println("HELP");
     return serv.getHSCodeById(id);
+  }
+
+  @GetMapping(value = "{id}/minimal", produces = "application/json")
+  public ResponseEntity<HSCodeMinimal> getHSCodeByIdMinimal(@PathVariable Long id) {
+    System.out.println("HELLO WORLD");
+    return serv.getHSCodeByIdMinimal(id);
   }
 
   @PostMapping

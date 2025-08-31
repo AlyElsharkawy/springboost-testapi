@@ -16,7 +16,7 @@ import jakarta.persistence.PrePersist;
 public class HSCode {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long Id;
+  private Long id;
 
   @Column(unique = true, nullable = false)
   private String code;
@@ -37,7 +37,7 @@ public class HSCode {
   }
 
   public HSCode(Long Id, String code, String name, LocalDateTime timeStamp) {
-    this.Id = Id;
+    this.id = Id;
     this.code = code;
     this.name = name;
     this.timeStamp = timeStamp;
@@ -50,7 +50,7 @@ public class HSCode {
 
   // Getters
   public Long getId() {
-    return this.Id;
+    return this.id;
   }
 
   public String getCode() {
@@ -67,7 +67,7 @@ public class HSCode {
 
   // Setters
   public void setId(Long Id) {
-    this.Id = Id;
+    this.id = Id;
   }
 
   public void setName(String name) {
@@ -84,7 +84,7 @@ public class HSCode {
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.Id, this.code, this.name, this.timeStamp);
+    return Objects.hash(this.id, this.code, this.name, this.timeStamp);
   }
 
   @Override
@@ -92,7 +92,7 @@ public class HSCode {
     if (o == null || getClass() != o.getClass())
       return false;
     HSCode that = (HSCode) o;
-    return Objects.equals(that.Id, this.Id) &&
+    return Objects.equals(that.id, this.id) &&
         Objects.equals(that.name, this.name) &&
         Objects.equals(that.code, this.code) &&
         Objects.equals(that.timeStamp, this.timeStamp);
