@@ -1,4 +1,4 @@
-package com.example.springboot.entity;
+package com.example.springboot.entity.hscode;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

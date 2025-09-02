@@ -1,10 +1,10 @@
-package com.example.springboot.controller;
+package com.example.springboot.controller.hscode;
 
 import java.util.List;
-import com.example.springboot.service.HSCodeService;
-import com.example.springboot.entity.HSCode;
-import com.example.springboot.entity.HSCodeMinimal;
-import com.example.springboot.mapper.HSCodeMapper;
+import com.example.springboot.service.hscode.HSCodeService;
+import com.example.springboot.entity.hscode.HSCode;
+import com.example.springboot.entity.hscode.HSCodeMinimal;
+import com.example.springboot.mapper.hscode.HSCodeMapper;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

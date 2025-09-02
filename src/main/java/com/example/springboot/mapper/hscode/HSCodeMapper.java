@@ -1,7 +1,7 @@
-package com.example.springboot.mapper;
+package com.example.springboot.mapper.hscode;
 
-import com.example.springboot.entity.HSCode;
-import com.example.springboot.entity.HSCodeMinimal;
+import com.example.springboot.entity.hscode.HSCode;
+import com.example.springboot.entity.hscode.HSCodeMinimal;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

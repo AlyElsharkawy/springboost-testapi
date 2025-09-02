@@ -1,4 +1,4 @@
-package com.example.springboot.entity;
+package com.example.springboot.entity.hscode;
 
 import java.time.LocalDateTime;
 import java.util.Objects;

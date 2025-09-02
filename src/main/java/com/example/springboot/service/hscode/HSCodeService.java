@@ -1,9 +1,9 @@
-package com.example.springboot.service;
+package com.example.springboot.service.hscode;
 
-import com.example.springboot.repository.HSCodeRepository;
-import com.example.springboot.entity.HSCode;
-import com.example.springboot.entity.HSCodeMinimal;
-import com.example.springboot.mapper.HSCodeMapper;
+import com.example.springboot.repository.hscode.HSCodeRepository;
+import com.example.springboot.entity.hscode.HSCode;
+import com.example.springboot.entity.hscode.HSCodeMinimal;
+import com.example.springboot.mapper.hscode.HSCodeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
