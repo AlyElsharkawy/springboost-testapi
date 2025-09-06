@@ -28,6 +28,9 @@ public class HSCode {
     @CreationTimestamp
     private LocalDateTime creationTimestamp;
 
+    @Column
+    private LocalDateTime updateTimestamp;
+
     @PrePersist
     protected void onCreate() {
         this.creationTimestamp = LocalDateTime.now();
@@ -43,7 +46,9 @@ public class HSCode {
         this.creationTimestamp = timeStamp;
     }
 
-    public HSCode(String code, String name) {
+    // The order is inverted from the top constructor due to a mistake in the dummy
+    // data that I was too lazy to fix
+    public HSCode(String name, String code) {
         this.code = code;
         this.name = name;
     }
@@ -59,6 +64,10 @@ public class HSCode {
 
     public String getName() {
         return this.name;
+    }
+
+    public LocalDateTime getUpdateTimestamp() {
+        return this.updateTimestamp;
     }
 
     public LocalDateTime getCreationTimestamp() {
@@ -80,6 +89,10 @@ public class HSCode {
 
     public void setCreationTimestamp(LocalDateTime timeStamp) {
         this.creationTimestamp = timeStamp;
+    }
+
+    public void setUpdateTimeStamp(LocalDateTime timeStamp) {
+        this.updateTimestamp = timeStamp;
     }
 
     @Override

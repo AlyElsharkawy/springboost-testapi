@@ -26,7 +26,7 @@ public class Company {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(unique = true, nullable = false)
     private String taxNumber; // Don't forget the dashes 123-456-789
 
     // In real life, there are a lot of companies with identical names, but I don't
@@ -48,6 +48,11 @@ public class Company {
 
     public Company(Long id, String taxNumber, String name) {
         this.id = id;
+        this.taxNumber = taxNumber;
+        this.name = name;
+    }
+
+    public Company(String taxNumber, String name) {
         this.taxNumber = taxNumber;
         this.name = name;
     }

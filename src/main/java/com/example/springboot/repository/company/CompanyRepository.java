@@ -5,5 +5,7 @@ import com.example.springboot.entity.company.Company;
 import java.util.Optional;
 
 public interface CompanyRepository extends JpaRepository<Company, Long> {
+    Optional<Company> findByTaxNumber(String taxNumber);
 
+    Optional<Company> findByName(String name);
 }

@@ -26,11 +26,11 @@ public class HSCodeService {
         this.repo = repo;
     }
 
-    public List<HSCode> getAllHSCodes() {
+    public List<HSCode> getAllHSCodes(String endpoint) {
         return repo.findAll();
     }
 
-    public ResponseEntity<HSCode> getHSCodeById(Long id) {
+    public ResponseEntity<HSCode> getHSCodeById(Long id, String endpoint) {
         // return repo.findById(id).orElseThrow(() -> new RuntimeException("HSCode not
         // found"));
         Optional<HSCode> temp;
@@ -46,7 +46,7 @@ public class HSCodeService {
             return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<HSCodeMinimal> getHSCodeByIdMinimal(Long id) {
+    public ResponseEntity<HSCodeMinimal> getHSCodeByIdMinimal(Long id, String endpoint) {
         // return repo.findById(id).orElseThrow(() -> new RuntimeException("HSCode not
         // found"));
         Optional<HSCode> temp;
@@ -58,14 +58,12 @@ public class HSCodeService {
         }
         if (temp.isPresent()) {
             HSCodeMinimal tempDto = hsCodeMapper.toDTO(temp.get());
-            System.out.println("Moment of truth: ");
-            // System.out.println("Name: " + tempDto.getName());
             return ResponseEntity.ok(tempDto);
         } else
             return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<Long> insertHSCode(HSCode input) {
+    public ResponseEntity<Long> insertHSCode(HSCode input, String endpoint) {
         try {
             if (repo.findByCode(input.getCode()).isPresent() || repo.findByName(input.getName()).isPresent()) {
                 // Magic numbers are bad...is there another way that doesn't involve
@@ -82,7 +80,7 @@ public class HSCodeService {
 
     // Delete in a transaction
     @Transactional
-    public ResponseEntity<HSCode> deleteHSCodeById(Long id) {
+    public ResponseEntity<HSCode> deleteHSCodeById(Long id, String endpoint) {
         try {
             repo.deleteById(id);
         } catch (Exception e) {
@@ -92,7 +90,7 @@ public class HSCodeService {
         return ResponseEntity.noContent().build();
     }
 
-    public ResponseEntity<HSCode> updateHSCode(Long id, HSCode newHSCode) {
+    public ResponseEntity<HSCode> updateHSCode(Long id, HSCode newHSCode, String endpoint) {
         Optional<HSCode> temp;
         try {
             temp = repo.findById(id)
@@ -106,7 +104,8 @@ public class HSCodeService {
             System.out.println("DATABASE ERROR");
             return ResponseEntity.internalServerError().build();
         }
-        // Lets do a DTO mapping to remove the ID and timestamp attributes
+        // TODO:
+        // a DTO mapping to remove the ID and timestamp attributes
         return ResponseEntity.ok().body(temp.get());
     }
 }

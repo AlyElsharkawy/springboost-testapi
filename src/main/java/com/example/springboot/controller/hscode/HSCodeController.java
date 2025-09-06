@@ -26,8 +26,8 @@ public class HSCodeController {
     }
 
     @GetMapping
-    public List<HSCode> getAllHSCodes() {
-        return serv.getAllHSCodes();
+    public List<HSCode> getAllHSCodes(String endpoint) {
+        return serv.getAllHSCodes(endpoint);
         /*
          * List.of(
          * new HSCode(1L, "FIRST", "Hambola", LocalDateTime.now()),
@@ -42,29 +42,28 @@ public class HSCodeController {
      */
 
     @GetMapping("{id}")
-    public ResponseEntity<HSCode> getHSCodeById(@PathVariable Long id) {
-        System.out.println("HELP");
-        return serv.getHSCodeById(id);
+    public ResponseEntity<HSCode> getHSCodeById(@PathVariable Long id, String endpoint) {
+        return serv.getHSCodeById(id, endpoint);
     }
 
     @GetMapping(value = "{id}/minimal", produces = "application/json")
-    public ResponseEntity<HSCodeMinimal> getHSCodeByIdMinimal(@PathVariable Long id) {
+    public ResponseEntity<HSCodeMinimal> getHSCodeByIdMinimal(@PathVariable Long id, String endpoint) {
         System.out.println("HELLO WORLD");
-        return serv.getHSCodeByIdMinimal(id);
+        return serv.getHSCodeByIdMinimal(id, endpoint);
     }
 
     @PostMapping
-    public ResponseEntity<Long> addNewHSCode(@RequestBody HSCode input) {
-        return serv.insertHSCode(input);
+    public ResponseEntity<Long> addNewHSCode(@RequestBody HSCode input, String endpoint) {
+        return serv.insertHSCode(input, endpoint);
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<HSCode> deleteHSCode(@PathVariable Long id) {
-        return serv.deleteHSCodeById(id);
+    public ResponseEntity<HSCode> deleteHSCode(@PathVariable Long id, String endpoint) {
+        return serv.deleteHSCodeById(id, endpoint);
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<HSCode> updateHSCode(@PathVariable Long id, @RequestBody HSCode newHSCode) {
-        return serv.updateHSCode(id, newHSCode);
+    public ResponseEntity<HSCode> updateHSCode(@PathVariable Long id, @RequestBody HSCode newHSCode, String endpoint) {
+        return serv.updateHSCode(id, newHSCode, endpoint);
     }
 }
