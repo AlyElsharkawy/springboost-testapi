@@ -4,6 +4,8 @@ import com.example.springboot.repository.hscode.HSCodeRepository;
 import com.example.springboot.entity.hscode.HSCode;
 import com.example.springboot.dto.hscode.HSCodeMinimal;
 import com.example.springboot.mapper.hscode.HSCodeMapper;
+
+import org.apache.catalina.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -90,22 +92,21 @@ public class HSCodeService {
         return ResponseEntity.noContent().build();
     }
 
-    public ResponseEntity<HSCode> updateHSCode(Long id, HSCode newHSCode, String endpoint) {
+    public ResponseEntity<HSCodeMinimal> updateHSCode(Long id, HSCode newHSCode, String endpoint) {
         Optional<HSCode> temp;
         try {
             temp = repo.findById(id)
                     .map(existingHSCode -> {
                         existingHSCode.setCode(newHSCode.getCode());
                         existingHSCode.setName(newHSCode.getName());
-                        existingHSCode.setCreationTimestamp(LocalDateTime.now()); // optional update
+                        existingHSCode.setUpdateTimeStamp(LocalDateTime.now());
                         return repo.save(existingHSCode);
                     });
+            HSCodeMinimal result = hsCodeMapper.toDTO(temp.get());
+            return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             System.out.println("DATABASE ERROR");
             return ResponseEntity.internalServerError().build();
         }
-        // TODO:
-        // a DTO mapping to remove the ID and timestamp attributes
-        return ResponseEntity.ok().body(temp.get());
     }
 }

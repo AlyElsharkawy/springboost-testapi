@@ -41,11 +41,11 @@ public class CompanyController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<Company> deleteCompany(@PathVariable Long id) {
-        return serv.deleteCompanyByID(id, "DELETE /Company");
+        return serv.deleteCompanyByID(id, "DELETE /Company/{id}");
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Company> updateCompanyById(@PathVariable Long id, @RequestBody Company company) {
-        return serv.updateCompany(id, company, "PUT /Company");
+    public ResponseEntity<CompanyDTOResponse> updateCompanyById(@PathVariable Long id, @RequestBody Company company) {
+        return serv.updateCompany(id, company, "PUT /Company/{id}");
     }
 }

@@ -1,4 +1,4 @@
-package com.example.springboot.service.company;
+package com.example.springboot.service.bol;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,26 +9,29 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.beans.factory.annotation.Value;
 
+import com.example.springboot.entity.bol.BillOfLading;
 import com.example.springboot.entity.company.Company;
-import com.example.springboot.dto.company.CompanyDTOResponse;
-import com.example.springboot.mapper.company.CompanyDTOResponseMapper;
-import com.example.springboot.repository.company.CompanyRepository;
 import com.example.springboot.exception.BusinessLogicException;
+import com.example.springboot.dto.bol.BillOfLadingDTOResponse;
+import com.example.springboot.dto.bol.BillOfLadingDTORequest;
+import com.example.springboot.mapper.bol.BillOfLadingResponseDTOMapper;
+import com.example.springboot.repository.company.CompanyRepository;
+import com.example.springboot.repository.bol.BillOfLadingRepository;
+import com.example.springboot.repository.bol.BillOfLadingDetailRepository;
 
 import java.net.URI;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
-import java.time.LocalDateTime;
 
-@Configuration
-@PropertySource("classpath:error-messages.properties")
 @Service
-public class CompanyService {
-    private final CompanyRepository repo;
-    @Autowired
-    private CompanyDTOResponseMapper dtoResponseMapper;
+public class BillOfLadingService {
+    private final BillOfLadingRepository bolRepo;
+    private final BillOfLadingDetailRepository bolDetailRepo;
+    private final CompanyRepository companyRepo;
 
+    // Yes, this section was copied from CompanyService
+    // Good job on noticing! You have sharp eyes!
     // Usually, this would be in its own separate class
     // However, I am on a deadline...so none of that now
     @Value("${error.database.general-error}")
@@ -40,14 +43,21 @@ public class CompanyService {
     @Value("${error.business-logic.uniqueness}")
     private String businessLogicErrorMessage;
 
-    public CompanyService(CompanyRepository repo) {
-        this.repo = repo;
+    @Autowired
+    private BillOfLadingResponseDTOMapper bolDtoResponseMapper;
+
+    public BillOfLadingService(BillOfLadingRepository bolRepo,
+            BillOfLadingDetailRepository bolDetailRepo,
+            CompanyRepository companyRepo) {
+        this.bolRepo = bolRepo;
+        this.bolDetailRepo = bolDetailRepo;
+        this.companyRepo = companyRepo;
     }
 
-    public ResponseEntity<List<CompanyDTOResponse>> getAllCompanies(String endpoint) {
+    public ResponseEntity<List<BillOfLadingDTOResponse>> getAllBills(String endpoint) {
         try {
-            List<Company> companiesList = repo.findAll();
-            List<CompanyDTOResponse> result = dtoResponseMapper.toDTOList(companiesList);
+            List<BillOfLading> temp = bolRepo.findAll();
+            List<BillOfLadingDTOResponse> result = bolDtoResponseMapper.toDTOList(temp);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             String tempMessage = MessageFormat.format(databaseErrorMessage, endpoint, e.toString());
@@ -56,11 +66,11 @@ public class CompanyService {
         }
     }
 
-    public ResponseEntity<CompanyDTOResponse> getCompanyById(Long id, String endpoint) {
+    public ResponseEntity<BillOfLadingDTOResponse> getBillById(Long id, String endpoint) {
         try {
-            Optional<Company> tempCompany = repo.findById(id);
-            if (tempCompany.isPresent()) {
-                CompanyDTOResponse result = dtoResponseMapper.toDTO(tempCompany.get());
+            Optional<BillOfLading> temp = bolRepo.findById(id);
+            if (temp.isPresent()) {
+                BillOfLadingDTOResponse result = bolDtoResponseMapper.toDto(temp.get());
                 return ResponseEntity.ok(result);
             } else {
                 String errorMessage = MessageFormat.format(notFoundErrorMessage, id, endpoint);
@@ -74,17 +84,23 @@ public class CompanyService {
         }
     }
 
-    public ResponseEntity<?> insertCompany(Company input, String endpoint) {
+    public ResponseEntity<?> insertBill(BillOfLadingDTORequest bol, String endpoint) {
         try {
-            // First make sure we are not violating any business Logic
-            Optional<Company> tempCompanyName = repo.findByName(input.getName());
-            Optional<Company> tempCompanyTaxNumber = repo.findByTaxNumber(input.getTaxNumber());
-            if (tempCompanyName.isPresent() || tempCompanyTaxNumber.isPresent()) {
+            Optional<BillOfLading> tempNbr = bolRepo.findByNbr(bol.getNbr());
+            Optional<Company> tempCompany = companyRepo.findById(bol.getCompanyId());
+            if (tempNbr.isPresent()) {
                 String errorMessage = MessageFormat.format(businessLogicErrorMessage, endpoint);
                 throw new BusinessLogicException(errorMessage);
+            } else if (!tempCompany.isPresent()) {
+                String errorMessage = MessageFormat
+                        .format(notFoundErrorMessage, bol.getCompanyId(), endpoint);
+                return ResponseEntity.badRequest().body(errorMessage);
+            } else {
+                BillOfLading result = new BillOfLading(bol.getNbr(), tempCompany.get());
+                bolRepo.save(result);
+                return ResponseEntity.created(URI.create("/Bills" +
+                        result.getId())).body(result.getId());
             }
-            repo.save(input);
-            return ResponseEntity.created(URI.create("/Company" + input.getId())).body(input.getId());
         } catch (BusinessLogicException ble) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(ble.getMessage());
         } catch (Exception e) {
@@ -94,11 +110,11 @@ public class CompanyService {
         }
     }
 
-    public ResponseEntity<Company> deleteCompanyByID(Long id, String endpoint) {
+    public ResponseEntity<BillOfLading> deleteBillById(Long id, String endpoint) {
         try {
-            Optional<Company> temp = repo.findById(id);
+            Optional<BillOfLading> temp = bolRepo.findById(id);
             if (temp.isPresent()) {
-                repo.deleteById(temp.get().getId());
+                bolRepo.deleteById(id);
                 return ResponseEntity.noContent().build();
             } else {
                 String errorMessage = MessageFormat.format(notFoundErrorMessage, id, endpoint);
@@ -112,17 +128,20 @@ public class CompanyService {
         }
     }
 
-    public ResponseEntity<CompanyDTOResponse> updateCompany(Long id, Company newCompany, String endpoint) {
+    public ResponseEntity<BillOfLadingDTOResponse> updateBillbyId(Long id, BillOfLadingDTORequest req,
+            String endpoint) {
         try {
-            Optional<Company> temp = repo.findById(id);
-            if (temp.isPresent()) {
-                temp = temp.map(existingCompany -> {
-                    existingCompany.setName(newCompany.getName());
-                    existingCompany.setTaxNumber(newCompany.getTaxNumber());
-                    existingCompany.setUpdateTimestamp(LocalDateTime.now());
-                    return repo.save(existingCompany);
+            Optional<BillOfLading> temp = bolRepo.findById(id);
+            Optional<Company> tempCompany = companyRepo.findById(req.getCompanyId());
+            System.out.println("bol id: " + Long.toString(id));
+            System.out.println("company id: " + req.getCompanyId());
+            if (temp.isPresent() && tempCompany.isPresent()) {
+                temp = temp.map(existingBol -> {
+                    existingBol.setNbr(req.getNbr());
+                    existingBol.setCompany(tempCompany.get());
+                    return bolRepo.save(existingBol);
                 });
-                CompanyDTOResponse result = dtoResponseMapper.toDTO(temp.get());
+                BillOfLadingDTOResponse result = bolDtoResponseMapper.toDto(temp.get());
                 return ResponseEntity.ok(result);
             } else {
                 String errorMessage = MessageFormat.format(notFoundErrorMessage, id, endpoint);

@@ -56,4 +56,31 @@ public class Company {
         this.taxNumber = taxNumber;
         this.name = name;
     }
+
+    // These getters were added so that my LSP could shut up
+    // I use neovim as my IDE and I am too lazy to configure the LSP manually
+    // So yeah...I added these getters and setters instead
+    public String getName() {
+        return this.name;
+    }
+
+    public String getTaxNumber() {
+        return this.taxNumber;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setTaxNumber(String taxNumber) {
+        this.taxNumber = taxNumber;
+    }
+
+    public void setUpdateTimestamp(LocalDateTime timestamp) {
+        this.updateTimestamp = timestamp;
+    }
 }

@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class CompanyDTOResponse {
-    public String name;
-    public String taxNumber;
+    private String name;
+    private String taxNumber;
 }

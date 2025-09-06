@@ -63,7 +63,8 @@ public class HSCodeController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<HSCode> updateHSCode(@PathVariable Long id, @RequestBody HSCode newHSCode, String endpoint) {
+    public ResponseEntity<HSCodeMinimal> updateHSCode(@PathVariable Long id, @RequestBody HSCode newHSCode,
+            String endpoint) {
         return serv.updateHSCode(id, newHSCode, endpoint);
     }
 }
