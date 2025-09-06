@@ -10,19 +10,19 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface HSCodeMapper {
 
-  // Entity to DTO
-  HSCodeMinimal toDTO(HSCode entity);
+    // Entity to DTO
+    HSCodeMinimal toDTO(HSCode entity);
 
-  @Mapping(target = "id", ignore = true)
-  @Mapping(target = "timeStamp", ignore = true)
-  HSCode toEntity(HSCodeMinimal dto);
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "creationTimestamp", ignore = true)
+    HSCode toEntity(HSCodeMinimal dto);
 
-  List<HSCodeMinimal> toDTOList(List<HSCode> entities);
+    List<HSCodeMinimal> toDTOList(List<HSCode> entities);
 
-  List<HSCode> toEntityList(List<HSCodeMinimal> dtos);
+    List<HSCode> toEntityList(List<HSCodeMinimal> dtos);
 
-  // Update existing entity from DTO
-  @Mapping(target = "id", ignore = true)
-  @Mapping(target = "timeStamp", ignore = true)
-  void updateEntityFromDTO(HSCodeMinimal dto, @MappingTarget HSCode entity);
+    // Update existing entity from DTO
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "creationTimestamp", ignore = true)
+    void updateEntityFromDTO(HSCodeMinimal dto, @MappingTarget HSCode entity);
 }

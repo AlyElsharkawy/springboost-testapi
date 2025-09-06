@@ -26,11 +26,11 @@ public class HSCode {
 
     @Column(nullable = false)
     @CreationTimestamp
-    private LocalDateTime timeStamp;
+    private LocalDateTime creationTimestamp;
 
     @PrePersist
     protected void onCreate() {
-        this.timeStamp = LocalDateTime.now();
+        this.creationTimestamp = LocalDateTime.now();
     }
 
     public HSCode() {
@@ -40,7 +40,7 @@ public class HSCode {
         this.id = Id;
         this.code = code;
         this.name = name;
-        this.timeStamp = timeStamp;
+        this.creationTimestamp = timeStamp;
     }
 
     public HSCode(String code, String name) {
@@ -61,8 +61,8 @@ public class HSCode {
         return this.name;
     }
 
-    public LocalDateTime getTimeStamp() {
-        return this.timeStamp;
+    public LocalDateTime getCreationTimestamp() {
+        return this.creationTimestamp;
     }
 
     // Setters
@@ -78,13 +78,13 @@ public class HSCode {
         this.code = code;
     }
 
-    public void setTimeStamp(LocalDateTime timeStamp) {
-        this.timeStamp = timeStamp;
+    public void setCreationTimestamp(LocalDateTime timeStamp) {
+        this.creationTimestamp = timeStamp;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.id, this.code, this.name, this.timeStamp);
+        return Objects.hash(this.id, this.code, this.name, this.creationTimestamp);
     }
 
     @Override
@@ -95,6 +95,6 @@ public class HSCode {
         return Objects.equals(that.id, this.id) &&
                 Objects.equals(that.name, this.name) &&
                 Objects.equals(that.code, this.code) &&
-                Objects.equals(that.timeStamp, this.timeStamp);
+                Objects.equals(that.creationTimestamp, this.creationTimestamp);
     }
 }

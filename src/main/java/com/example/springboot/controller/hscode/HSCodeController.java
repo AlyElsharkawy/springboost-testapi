@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/HSCodes")
+@RequestMapping("/HSCode")
 public class HSCodeController {
 
     private final HSCodeService serv;
