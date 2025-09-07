@@ -53,7 +53,7 @@ public class HSCodeController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> addNewHSCode(@RequestBody HSCode input, String endpoint) {
+    public ResponseEntity<?> addNewHSCode(@RequestBody HSCode input, String endpoint) {
         return serv.insertHSCode(input, endpoint);
     }
 

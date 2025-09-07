@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.example.springboot.dto.bol.BillOfLadingDTOResponse;
+import com.example.springboot.dto.bol.BillOfLadingDTOCompleteResponse;
 import com.example.springboot.dto.bol.BillOfLadingDTORequest;
 import com.example.springboot.entity.bol.BillOfLading;
 import com.example.springboot.entity.bol.BillOfLadingDetail;
@@ -39,6 +40,11 @@ public class BillOfLadingController {
     @GetMapping("{id}")
     public ResponseEntity<BillOfLadingDTOResponse> getBillById(@PathVariable Long id) {
         return serv.getBillById(id, "GET /Bills/{id}");
+    }
+
+    @GetMapping("/Complete/{id}")
+    public ResponseEntity<BillOfLadingDTOCompleteResponse> getCompleteBill(@PathVariable Long id) {
+        return serv.getCompleteBill(id, "GET /Bills/Complete/{id}");
     }
 
     @PostMapping

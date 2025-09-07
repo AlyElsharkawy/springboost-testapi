@@ -114,6 +114,11 @@ public class DummyData {
                 new BillOfLadingDetailFullRequestDTO(1100L, 2L, 1L,
                         new BigDecimal(1000.0), 5L, new BigDecimal(4.0)),
                 "POST /Bills/Detail DUMMY_DATA");
+
+        bolDetailService.createBillDetail(
+                new BillOfLadingDetailFullRequestDTO(1100L, 5L, 2L,
+                        new BigDecimal(1000.0), 5L, new BigDecimal(4.0)),
+                "POST /Bills/Detail DUMMY_DATA");
     }
 
 }

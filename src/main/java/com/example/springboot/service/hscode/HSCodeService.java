@@ -65,12 +65,12 @@ public class HSCodeService {
             return ResponseEntity.notFound().build();
     }
 
-    public ResponseEntity<Long> insertHSCode(HSCode input, String endpoint) {
+    public ResponseEntity<?> insertHSCode(HSCode input, String endpoint) {
         try {
             if (repo.findByCode(input.getCode()).isPresent() || repo.findByName(input.getName()).isPresent()) {
                 // Magic numbers are bad...is there another way that doesn't involve
                 // ResponseEntity<?>...?
-                return ResponseEntity.status(HttpStatus.CONFLICT).body(-1L);
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
             }
             repo.save(input);
             return ResponseEntity.created(URI.create("/HSCodes" + input.getId())).body(input.getId());

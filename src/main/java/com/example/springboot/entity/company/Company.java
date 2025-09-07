@@ -19,7 +19,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class Company {
     @Id
@@ -55,6 +54,9 @@ public class Company {
     public Company(String taxNumber, String name) {
         this.taxNumber = taxNumber;
         this.name = name;
+    }
+
+    public Company() {
     }
 
     // These getters were added so that my LSP could shut up

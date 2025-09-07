@@ -10,10 +10,14 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.example.springboot.entity.bol.BillOfLading;
+import com.example.springboot.entity.bol.BillOfLadingDetail;
 import com.example.springboot.entity.company.Company;
 import com.example.springboot.exception.BusinessLogicException;
 import com.example.springboot.dto.bol.BillOfLadingDTOResponse;
+import com.example.springboot.dto.bol.BillOfLadingDetailDTOResponse;
+import com.example.springboot.dto.bol.BillOfLadingDTOCompleteResponse;
 import com.example.springboot.dto.bol.BillOfLadingDTORequest;
+import com.example.springboot.mapper.bol.BillOfLadingDetailResponseMapper;
 import com.example.springboot.mapper.bol.BillOfLadingResponseDTOMapper;
 import com.example.springboot.repository.company.CompanyRepository;
 import com.example.springboot.repository.bol.BillOfLadingRepository;
@@ -28,6 +32,7 @@ import java.util.Optional;
 @Service
 public class BillOfLadingService {
     private final BillOfLadingRepository bolRepo;
+    private final BillOfLadingDetailRepository bolDetailRepo;
     private final CompanyRepository companyRepo;
 
     // Yes, this section was copied from CompanyService
@@ -46,11 +51,15 @@ public class BillOfLadingService {
     @Autowired
     private BillOfLadingResponseDTOMapper bolDtoResponseMapper;
 
+    @Autowired
+    private BillOfLadingDetailResponseMapper bolDtoDetailResponseMapper;
+
     public BillOfLadingService(BillOfLadingRepository bolRepo,
             BillOfLadingDetailRepository bolDetailRepo,
             CompanyRepository companyRepo) {
         this.bolRepo = bolRepo;
         this.companyRepo = companyRepo;
+        this.bolDetailRepo = bolDetailRepo;
     }
 
     public ResponseEntity<List<BillOfLadingDTOResponse>> getAllBills(String endpoint) {
@@ -71,6 +80,35 @@ public class BillOfLadingService {
             if (temp.isPresent()) {
                 BillOfLadingDTOResponse result = bolDtoResponseMapper.toDto(temp.get());
                 return ResponseEntity.ok(result);
+            } else {
+                String errorMessage = MessageFormat.format(notFoundErrorMessage, id, endpoint);
+                System.err.println(errorMessage);
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            String tempMessage = MessageFormat.format(databaseErrorMessage, endpoint, e.toString());
+            System.err.println(tempMessage);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    public ResponseEntity<BillOfLadingDTOCompleteResponse> getCompleteBill(
+            Long id,
+            String endpoint) {
+        try {
+            Optional<BillOfLading> temp = bolRepo.findById(id);
+            if (temp.isPresent()) {
+                List<BillOfLadingDetail> tempDetails = bolDetailRepo.findByBolId(id);
+                List<BillOfLadingDetailDTOResponse> detailsResult = bolDtoDetailResponseMapper.toDTOList(tempDetails);
+                BillOfLadingDTOResponse tempResult = bolDtoResponseMapper.toDto(temp.get());
+
+                BillOfLadingDTOCompleteResponse result = new BillOfLadingDTOCompleteResponse();
+                result.setNbr(tempResult.getNbr());
+                result.setCompanyName(tempResult.getCompanyName());
+                result.setDetails(detailsResult);
+
+                return ResponseEntity.ok(result);
+
             } else {
                 String errorMessage = MessageFormat.format(notFoundErrorMessage, id, endpoint);
                 System.err.println(errorMessage);

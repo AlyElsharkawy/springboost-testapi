@@ -7,29 +7,38 @@ public class BillOfLadingDetailPartialRequestDTO {
     Long count;
     BigDecimal volume;
 
+    public BillOfLadingDetailPartialRequestDTO() {
+    }
+
+    public BillOfLadingDetailPartialRequestDTO(BigDecimal weight, Long count, BigDecimal volume) {
+        this.weight = weight;
+        this.count = count;
+        this.volume = volume;
+    }
+
     // Getters
-    private BigDecimal getWeight() {
+    public BigDecimal getWeight() {
         return this.weight;
     }
 
-    private BigDecimal getVolume() {
+    public BigDecimal getVolume() {
         return this.volume;
     }
 
-    private Long getCount() {
+    public Long getCount() {
         return this.count;
     }
 
     // Setters
-    private void setVolume(BigDecimal volume) {
+    public void setVolume(BigDecimal volume) {
         this.volume = volume;
     }
 
-    private void setCount(Long count) {
+    public void setCount(Long count) {
         this.count = count;
     }
 
-    private void setWeight(BigDecimal weight) {
+    public void setWeight(BigDecimal weight) {
         this.weight = weight;
     }
 }
