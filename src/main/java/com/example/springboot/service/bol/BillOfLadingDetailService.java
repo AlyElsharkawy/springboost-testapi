@@ -16,6 +16,7 @@ import com.example.springboot.repository.hscode.HSCodeRepository;
 import com.example.springboot.entity.bol.BillOfLadingDetail;
 import com.example.springboot.entity.hscode.HSCode;
 import com.example.springboot.entity.bol.BillOfLading;
+import com.example.springboot.dto.bol.BillOfLadingDTOResponse;
 import com.example.springboot.dto.bol.BillOfLadingDetailDTOResponse;
 import com.example.springboot.mapper.bol.BillOfLadingDetailResponseMapper;
 import com.example.springboot.dto.bol.BillOfLadingDetailFullRequestDTO;
@@ -102,10 +103,37 @@ public class BillOfLadingDetailService {
         }
     }
 
-    public ResponseEntity<Long> createBillDetail(BillOfLadingDetailFullRequestDTO req,
+    public ResponseEntity<BillOfLadingDetailDTOResponse> getBillDetail(Long id, String endpoint) {
+        try {
+            Optional<BillOfLadingDetail> temp = bolDetailRepo.findById(id);
+            if (temp.isPresent()) {
+                BillOfLadingDetailDTOResponse result = bolDetailMapper.toDto(temp.get());
+                System.out.println("Mapping successful: " + result);
+                return ResponseEntity.ok(result);
+            } else {
+                String errorMessage = MessageFormat.format(notFoundErrorMessage, id, endpoint);
+                System.err.println(errorMessage);
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            String tempMessage = MessageFormat.format(databaseErrorMessage, endpoint, e.toString());
+            System.err.println(tempMessage);
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    public ResponseEntity<?> createBillDetail(BillOfLadingDetailFullRequestDTO req,
             String endpoint) {
         try {
-            // TODO: SPECIFICATION VALIDATION TO ENSURE UNIQUENESS WITHIN SERIAL
+            // Validation
+            List<BillOfLadingDetail> check = bolDetailRepo.findByBolIdAndSerial(
+                    req.getBolId(), req.getSerial());
+            if (check.size() != 0) {
+                String errorMessage = MessageFormat.format(businessLogicErrorMessage, endpoint);
+                System.err.println(errorMessage);
+                throw new BusinessLogicException(errorMessage);
+            }
+            System.out.println("\n\n\nSize of List: " + check.size() + "\n\n\n");
             BillOfLadingDetail temp = ConvertResponseToFullObject(req);
             if (temp != null) {
                 bolDetailRepo.save(temp);
@@ -113,6 +141,8 @@ public class BillOfLadingDetailService {
             } else {
                 return ResponseEntity.badRequest().build();
             }
+        } catch (BusinessLogicException ble) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(ble.getMessage());
         } catch (Exception e) {
             String tempMessage = MessageFormat.format(databaseErrorMessage, endpoint, e.toString());
             System.err.println(tempMessage);

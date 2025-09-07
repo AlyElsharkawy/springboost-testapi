@@ -28,8 +28,14 @@ public class BillOfLadingDetailController {
         return bolDetailService.getAllBillDetails("GET /Bills/Detail");
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<BillOfLadingDetailDTOResponse> getBillDetail(@PathVariable Long id,
+            String endpoint) {
+        return bolDetailService.getBillDetail(id, "GET /Bills/Detail/{id}");
+    }
+
     @PostMapping
-    public ResponseEntity<Long> insertBillDetail(@RequestBody BillOfLadingDetailFullRequestDTO req) {
+    public ResponseEntity<?> insertBillDetail(@RequestBody BillOfLadingDetailFullRequestDTO req) {
         return bolDetailService.createBillDetail(req, "POST /Bills/Detail/{id}");
     }
 
