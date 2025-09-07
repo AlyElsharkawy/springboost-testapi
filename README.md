@@ -10,6 +10,10 @@ cd ./springboot-testapi
 mvn spring-boot:run
 ```
 
+### Note:
+
+You will need to edit the application.properties file so that it points to a valid postgresql database. Keep in mind that dummy data will be inserted for you and that the default settings are to **drop existing tables** on creation!
+
 # Endpoint Documentation:
 
 ## Bill of Lading:
