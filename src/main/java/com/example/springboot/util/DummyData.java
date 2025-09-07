@@ -8,16 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.example.springboot.service.bol.BillOfLadingService;
+import com.example.springboot.service.bol.BillOfLadingDetailService;
 import com.example.springboot.service.hscode.HSCodeService;
 import com.example.springboot.service.company.CompanyService;
 import com.example.springboot.entity.company.Company;
 import com.example.springboot.entity.hscode.HSCode;
 import com.example.springboot.dto.bol.BillOfLadingDTORequest;
 import com.example.springboot.dto.bol.BillOfLadingDTOResponse;
+import com.example.springboot.dto.bol.BillOfLadingDetailFullRequestDTO;
 import com.example.springboot.entity.bol.BillOfLading;
 import com.example.springboot.entity.bol.BillOfLadingDetail;
 
 import java.util.Random;
+import java.math.BigDecimal;
 
 /*
  * The dummy data class is going to add dummy data through the service as opposed to the service\
@@ -46,6 +49,9 @@ public class DummyData {
     @Autowired
     private HSCodeService hscodeService;
 
+    @Autowired
+    private BillOfLadingDetailService bolDetailService;
+
     public void InsertAllData() {
         System.out.println("Inserting dummy data...");
         if ("yes".equalsIgnoreCase(companyDataString)) {
@@ -54,17 +60,18 @@ public class DummyData {
             System.out.println("Not inserting company dummy data...");
         }
 
+        if ("yes".equalsIgnoreCase(hscodeDataString)) {
+            InsertHscodeData();
+        } else {
+            System.out.println("Not inserting hscode dummy data...");
+        }
+
         if ("yes".equalsIgnoreCase(bolDataString)) {
             InsertBolData();
         } else {
             System.out.println("Not inserting bol dummy data...");
         }
 
-        if ("yes".equalsIgnoreCase(hscodeDataString)) {
-            InsertHscodeData();
-        } else {
-            System.out.println("Not inserting hscode dummy data...");
-        }
     }
 
     private void InsertCompanyData() {
@@ -96,6 +103,17 @@ public class DummyData {
                 "POST /Bills DUMMY_DATA");
         bolService.insertBill(new BillOfLadingDTORequest(Integer.toString(random.nextInt(100000000)), 5L),
                 "POST /Bills DUMMY_DATA");
+
+        // Serial, HscodeId, bolId, weight, count, volume
+        bolDetailService.createBillDetail(
+                new BillOfLadingDetailFullRequestDTO(1000L, 1L, 1L,
+                        new BigDecimal(100.0), 2L, new BigDecimal(3.0)),
+                "POST /Bills/Detail DUMMY_DATA");
+
+        bolDetailService.createBillDetail(
+                new BillOfLadingDetailFullRequestDTO(1100L, 2L, 1L,
+                        new BigDecimal(1000.0), 5L, new BigDecimal(4.0)),
+                "POST /Bills/Detail DUMMY_DATA");
     }
 
 }

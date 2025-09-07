@@ -81,6 +81,7 @@ public class CompanyService {
             Optional<Company> tempCompanyTaxNumber = repo.findByTaxNumber(input.getTaxNumber());
             if (tempCompanyName.isPresent() || tempCompanyTaxNumber.isPresent()) {
                 String errorMessage = MessageFormat.format(businessLogicErrorMessage, endpoint);
+                System.err.println(errorMessage);
                 throw new BusinessLogicException(errorMessage);
             }
             repo.save(input);

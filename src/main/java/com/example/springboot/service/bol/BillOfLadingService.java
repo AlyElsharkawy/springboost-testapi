@@ -21,13 +21,13 @@ import com.example.springboot.repository.bol.BillOfLadingDetailRepository;
 
 import java.net.URI;
 import java.text.MessageFormat;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class BillOfLadingService {
     private final BillOfLadingRepository bolRepo;
-    private final BillOfLadingDetailRepository bolDetailRepo;
     private final CompanyRepository companyRepo;
 
     // Yes, this section was copied from CompanyService
@@ -50,7 +50,6 @@ public class BillOfLadingService {
             BillOfLadingDetailRepository bolDetailRepo,
             CompanyRepository companyRepo) {
         this.bolRepo = bolRepo;
-        this.bolDetailRepo = bolDetailRepo;
         this.companyRepo = companyRepo;
     }
 
@@ -139,6 +138,7 @@ public class BillOfLadingService {
                 temp = temp.map(existingBol -> {
                     existingBol.setNbr(req.getNbr());
                     existingBol.setCompany(tempCompany.get());
+                    existingBol.setUpdateTimestamp(LocalDateTime.now());
                     return bolRepo.save(existingBol);
                 });
                 BillOfLadingDTOResponse result = bolDtoResponseMapper.toDto(temp.get());

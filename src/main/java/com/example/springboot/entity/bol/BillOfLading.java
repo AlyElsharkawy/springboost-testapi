@@ -63,12 +63,24 @@ public class BillOfLading {
         return this.company;
     }
 
+    public LocalDateTime getCreationTimestamp() {
+        return this.creationTimestamp;
+    }
+
+    public LocalDateTime getUpdateTimestamp() {
+        return this.updateTimestamp;
+    }
+
     public void setNbr(String nbr) {
         this.nbr = nbr;
     }
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public void setUpdateTimestamp(LocalDateTime timestamp) {
+        this.updateTimestamp = timestamp;
     }
 
     public BillOfLading(String nbr, Company company) {
